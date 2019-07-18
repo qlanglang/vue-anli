@@ -1,6 +1,6 @@
 <template>
   <div class="login_container">
-    <!-- 头像区域 -->
+    <!-- 头像区域de  -->
     <div class="login_box">
       <div class="avatar_box">
         <img src="../assets/timg.jpg" alt />
