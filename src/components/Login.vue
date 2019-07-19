@@ -17,7 +17,7 @@
           <el-input v-model="loginForm.password" type="password" prefix-icon="iconfont icon-3702mima  "></el-input>
         </el-form-item>
         <el-form-item class="btns">
-          <el-button type="primary">登录</el-button>
+          <el-button type="primary" @click="login">登录</el-button>
           <el-button type="info" @click="resetLoginForm">重置</el-button>
         </el-form-item>
       </el-form>
@@ -25,13 +25,14 @@
   </div>
 </template>
 <script>
+import { async } from 'q';
 export default {
   data() {
     return {
       // 这是登录表单的数据绑定对象
       loginForm:{
-        username:'',
-        password:''
+        username:'admin',
+        password:'123456'
       },
       // 这是表单的验证规则对象
       loginFormRules:{
@@ -49,8 +50,24 @@ export default {
     };
   },
   methods: {
+    // 清空用户名和密码
     resetLoginForm(){
       this.$refs.loginFormRef.resetFields()
+    },
+    login(){
+      this.$refs.loginFormRef.validate(async valid => {
+        if(!valid)return//如果验证没通过代码就不会往下执行
+        // :res是data的别名  解构赋值
+        var {data:res} = await this.$http.post('login',this.loginForm)
+        if(res.meta.status!=200)return this.$message.error('登录失败');
+        //登录失败
+        this.$message.success('登录成功')//登录成功
+
+
+        
+        window.sessionStorage.setItem('token',res.data.token)
+        this.$router.push('/home')
+      })
     }
   }
 };
